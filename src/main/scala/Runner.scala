@@ -1,11 +1,18 @@
+package org.apache.spark.examples
+
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
 
-
 object Runner {
 
   def main(args: Array[String]): Unit = {
+
+    if (args.length == 0) {
+      println("it's need at least one parameter")
+    }
+    val filedirectory = args(0)
+
 
     val spark = SparkSession
       .builder()
@@ -14,7 +21,7 @@ object Runner {
       .getOrCreate()
 
     println("Read JSON Content: ")
-    val df = spark.read.json("data/20190223/input/sample-1-line.json")
+    val df = spark.read.json(filedirectory + "/input/sample-1-line.json")
     df.show(200, false)
 
     //df.printSchema()
@@ -59,7 +66,7 @@ object Runner {
       .option("delimiter", ";")
       .option("charset", "UTF-8")
       .mode(saveMode = "overwrite")
-      .save("data/20190223/output/E_S_result.csv")
+      .save(filedirectory + "/output/E_S_result.csv")
 
     spark.stop
     spark.close()
